@@ -36,6 +36,9 @@ const App = () => {
       approve
     }
 
+    console.log(postData)
+    alert('sent data')
+
     fetch('url - /feedback', {
       method: 'POST',
       headers: {
@@ -43,9 +46,6 @@ const App = () => {
       },
       body: JSON.stringify(postData)
     })
-
-    console.log(postData)
-    alert('sent data')
   }
   return (
     <div>
