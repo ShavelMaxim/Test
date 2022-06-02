@@ -1,134 +1,192 @@
-import React from 'react'
+import React, { useState } from 'react'
+import NumberFormat from 'react-number-format'
 import './app.css'
-// import FieldName from '../field-name/field-name'
 
 const App = () => {
+  const [email, setEmail] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [name, setName] = useState('')
+  const [town, setTown] = useState('')
+  const [linkMethod, setLinkMethod] = useState('')
+  const [requestTheme, setRequestTheme] = useState('')
+  const [question, setQuestion] = useState('')
+  const [approve, setApprove] = useState(false)
+
+  const towns = ['Иркутск', 'Усолье-Сибирское', 'Ангарск', 'Шелехов', 'Братск']
+  const linkMethods = ['email', 'звонок', 'sms']
+  const requestThemes = [
+    'Доставка',
+    'Качество товара',
+    'Сервис',
+    'Акции и скидки',
+    'Вакансии'
+  ]
+
+  const handleSubmit = e => {
+    e.preventDefault()
+
+    const postData = {
+      email,
+      phoneNumber,
+      name,
+      town,
+      linkMethod,
+      requestTheme,
+      question,
+      approve
+    }
+
+    fetch('url - /feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(postData)
+    })
+
+    console.log(postData)
+    alert('sent data')
+  }
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Создать аккаунт</legend>
           <div className='form-group row'>
-            <label for='staticEmail' class='col-sm-2 col-form-label'>
+            <label htmlFor='sampleEmail' className='col-sm-2 col-form-label'>
               Эл. адрес
             </label>
             <div className='col-sm-10'>
               <input
                 type='text'
-                readonly=''
-                class='form-control-plaintext'
-                id='staticEmail'
+                className='form-control-plaintext'
+                id='sampleEmail'
                 value='email@example.com'
+                readOnly
               />
             </div>
           </div>
           <div className='form-group'>
-            <label for='exampleInputEmail1' class='form-label mt-4'>
+            <label htmlFor='email' className='form-label mt-4'>
               Адрес электронной почты
             </label>
             <input
-              type='email'
-              class='form-control'
-              id='exampleInputEmail1'
+              type='text'
+              className='form-control'
+              id='email'
               aria-describedby='emailHelp'
               placeholder='Введите адрес электронной почты'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
             />
-            <small id='emailHelp' class='form-text text-muted'>
+            <small id='emailHelp' className='form-text text-muted'>
               Мы никогда не будем делиться вашей электронной почтой с кем-либо
               еще.
             </small>
           </div>
           <div className='form-group'>
-            <label for='exampleInputTel1' class='form-label mt-4'>
+            <label htmlFor='phoneNumber' className='form-label mt-4'>
               Номер телефона
             </label>
-            <input
-              type='tel'
-              className='form-control bfn-phone'
-              data-format='+7 (ddd) ddd-dd-dd'
-              id='exampleInputTel1'
+
+            <NumberFormat
+              className='form-control btn-phone'
+              format='+7(###)###-##-##'
               placeholder='+7(___)___-__-__'
-              aria-describedby='telHelp'
-              value='+7(___)___-__-__'
-              pattern='\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}'
-              // pattern='[\+]\d{1}\s[\(]\d{3}[\)]\s\d{3}[\-]\d{2}[\-]\d{2}'
-              minlength='18'
-              maxlength='18'
+              id='phoneNumber'
+              minLength='18'
+              maxLength='18'
+              value={phoneNumber}
+              onChange={e => setPhoneNumber(e.target.value)}
             />
-            {/* <span class='form__error'>
-              Это поле должно содержать телефон в формате +7 (999) 999-99-99
-            </span> */}
-            <small id='telHelp' class='form-text text-muted'>
+            <small id='phoneHelp' className='form-text text-muted'>
               Пример ввода +7(999) 999-99-99
             </small>
           </div>
           <div className='form-group'>
-            <label for='exampleInputPassword1' class='form-label mt-4'>
+            <label htmlFor='name' className='form-label mt-4'>
               Ваше имя
             </label>
             <input
               type='text'
               className='form-control'
-              id='exampleInputPassword1'
+              id='name'
               placeholder='Имя'
               required
+              value={name}
+              onChange={e => setName(e.target.value)}
             />
           </div>
           <div className='form-group'>
-            <label for='exampleSelect1' className='form-label mt-4'>
+            <label htmlFor='town' className='form-label mt-4'>
               Выберите город
             </label>
-            <select class='form-select' id='exampleSelect1'>
-              <option>Иркутск</option>
-              <option>Усолье-Сибирское</option>
-              <option>Ангарск</option>
-              <option>Шелехов</option>
-              <option>Братск</option>
+            <select
+              className='form-select'
+              id='town'
+              value={town}
+              onChange={e => setTown(e.target.value)}
+            >
+              {towns.map(item => {
+                return <option key={item}>{item}</option>
+              })}
             </select>
           </div>
           <div className='form-group'>
-            <label for='exampleSelect2' class='form-label mt-4'>
+            <label htmlFor='linkMethod' className='form-label mt-4'>
               Предпочитаемый способ связи
             </label>
-            <select multiple='' class='form-select' id='exampleSelect2'>
-              <option>email</option>
-              <option>звонок</option>
-              <option>sms</option>
+            <select
+              className='form-select'
+              id='linkMethod'
+              value={linkMethod}
+              onChange={e => setLinkMethod(e.target.value)}
+            >
+              {linkMethods.map(item => {
+                return <option key={item}>{item}</option>
+              })}
             </select>
           </div>
+          linkMethod
           <div className='form-group'>
-            <label for='exampleSelect2' class='form-label mt-4'>
+            <label htmlFor='requestTheme' className='form-label mt-4'>
               Выберите тему вашего вопроса
             </label>
-            <select ff class='form-select' id='exampleSelect2'>
-              <option>Доставка</option>
-              <option>Качество товара</option>
-              <option>Сервис</option>
-              <option>Акции и скидки</option>
-              <option>Вакансии</option>
+            <select
+              className='form-select'
+              id='requestTheme'
+              value={requestTheme}
+              onChange={e => setRequestTheme(e.target.value)}
+            >
+              {requestThemes.map(item => {
+                return <option key={item}>{item}</option>
+              })}
             </select>
           </div>
           <div className='form-group'>
-            <label for='exampleTextarea' className='form-label mt-4'>
+            <label htmlFor='question' className='form-label mt-4'>
               Задайте вопрос
             </label>
             <textarea
               className='form-control'
-              id='exampleTextarea'
+              id='question'
               rows='3'
               required
+              value={question}
+              onChange={e => setQuestion(e.target.value)}
             ></textarea>
           </div>
-
           <fieldset className='form-group'>
             <div className='form-check checkbox'>
               <input
                 className='form-check-input'
                 type='checkbox'
-                value=''
-                id='flexCheckDefault'
+                id='approve'
+                value={approve}
+                onChange={e => setApprove(e.target.value)}
+                required
               />
-              <label className='form-check-label' for='flexCheckDefault'>
+              <label className='form-check-label' htmlFor='approve'>
                 согласие на обработку персональных данных (обязательный выбор
                 для отправки формы)
               </label>
